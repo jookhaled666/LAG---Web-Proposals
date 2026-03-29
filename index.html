@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAG - Web Proposals</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- GSAP & ScrollTrigger Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Dark Liquid Glass (Deep Black #050505, Translucent White/Glass, Neon Purple #A855F7) -->
+    <!-- Application Structure Plan: 
+         - Price-Based Dashboard: Removed scroll-jacking. Introduced a clean Tier Toggle (Price Selector).
+         - When a price is selected, the features card and the radar chart dynamically update to reflect ONLY that tier's value.
+         - Much easier cognitive load for the client.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        neon: {
+                            DEFAULT: '#a855f7',
+                            light: '#d8b4fe',
+                            dark: '#7e22ce',
+                        },
+                        glass: {
+                            DEFAULT: 'rgba(255, 255, 255, 0.03)',
+                            border: 'rgba(255, 255, 255, 0.1)',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(168, 85, 247, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.05), transparent 25%);
+            background-attachment: fixed;
+            color: #f3f4f6;
+            overflow-x: clip; /* Fix for sticky positioning */
+        }
+
+        /* Preloader Glitch Effect */
+        #preloader { transition: opacity 0.8s ease-out, visibility 0.8s ease-out; }
+        .glitch-wrapper { position: relative; }
+        .glitch-text {
+            font-size: 5rem; font-weight: 800; position: relative; color: white; letter-spacing: 0.5rem;
+        }
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #050505;
+        }
+        .glitch-text::before {
+            left: 3px; text-shadow: -2px 0 #a855f7; clip: rect(24px, 550px, 90px, 0); animation: glitch-anim 2.5s infinite linear alternate-reverse;
+        }
+        .glitch-text::after {
+            left: -3px; text-shadow: -2px 0 #ffffff; clip: rect(85px, 550px, 140px, 0); animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(13px, 9999px, 85px, 0); } 20% { clip: rect(100px, 9999px, 20px, 0); } 40% { clip: rect(98px, 9999px, 68px, 0); } 60% { clip: rect(88px, 9999px, 45px, 0); } 80% { clip: rect(91px, 9999px, 15px, 0); } 100% { clip: rect(44px, 9999px, 7px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); } 20% { clip: rect(99px, 9999px, 11px, 0); } 40% { clip: rect(29px, 9999px, 81px, 0); } 60% { clip: rect(42px, 9999px, 97px, 0); } 80% { clip: rect(26px, 9999px, 94px, 0); } 100% { clip: rect(81px, 9999px, 59px, 0); }
+        }
+
+        /* Navbar Glitch Effect */
+        .nav-glitch { position: relative; display: inline-block; }
+        .nav-glitch::before, .nav-glitch::after {
+            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 10, 10, 0.9);
+        }
+        .nav-glitch::before { left: 2px; text-shadow: -1px 0 #a855f7; animation: nav-glitch-anim 2s infinite linear alternate-reverse; }
+        .nav-glitch::after { left: -2px; text-shadow: -1px 0 #ffffff; animation: nav-glitch-anim-2 2.5s infinite linear alternate-reverse; }
+        @keyframes nav-glitch-anim { 0% { clip-path: inset(10% 0 60% 0); } 50% { clip-path: inset(40% 0 30% 0); } 100% { clip-path: inset(30% 0 50% 0); } }
+        @keyframes nav-glitch-anim-2 { 0% { clip-path: inset(20% 0 20% 0); } 50% { clip-path: inset(10% 0 50% 0); } 100% { clip-path: inset(50% 0 30% 0); } }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.4); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); transition: all 0.3s ease;
+        }
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4), inset 0 0 15px rgba(168, 85, 247, 0.1);
+            border-color: rgba(168, 85, 247, 0.5);
+        }
+
+        /* Tab Transitions */
+        .tab-content {
+            display: none; opacity: 0;
+        }
+        .tab-content.active {
+            display: block; opacity: 1;
+        }
+
+        .chart-container {
+            position: relative; width: 100%; max-width: 500px; margin: auto; height: 220px;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 350px; }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(168, 85, 247, 0.6); }
+
+        html { scroll-behavior: smooth; }
+
+        /* --- NEW PREMIUM EFFECTS --- */
+        /* Custom Cursor (All Devices) */
+        body, a, button { cursor: none !important; }
+        
+        .cursor-dot, .cursor-outline { 
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); 
+            border-radius: 50%; z-index: 9999; pointer-events: none; opacity: 1; 
+        }
+        .cursor-dot { width: 6px; height: 6px; background-color: #a855f7; box-shadow: 0 0 10px #a855f7; }
+        .cursor-outline { 
+            width: 40px; height: 40px; border: 1px solid rgba(168, 85, 247, 0.5); 
+            transition: width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out; 
+        }
+
+        /* Background Animated Liquid Orbs */
+        .bg-orb { 
+            position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; 
+            opacity: 0.3; animation: floatOrb 20s infinite ease-in-out alternate; pointer-events: none; 
+        }
+        .orb-1 { top: -20%; left: -10%; width: 50vw; height: 50vw; background: rgba(168, 85, 247, 0.15); }
+        .orb-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: rgba(30, 58, 138, 0.15); animation-delay: -10s; }
+        @keyframes floatOrb { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(5%, 10%) scale(1.1); } }
+
+        /* Flashlight Effect for Glass Cards */
+        .glass-card { position: relative; overflow: hidden; }
+        .glass-card::before {
+            content: ''; position: absolute; top: var(--mouse-y, 0); left: var(--mouse-x, 0); transform: translate(-50%, -50%);
+            width: 450px; height: 450px; background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 60%);
+            opacity: 0; transition: opacity 0.5s; pointer-events: none; mix-blend-mode: screen; z-index: 1;
+        }
+        .glass-card:hover::before { opacity: 1; }
+        .glass-card > * { position: relative; z-index: 2; } /* Keep text above the glow */
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-neon selection:text-white">
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Background Animated Orbs -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    <!-- PRELOADER -->
+    <div id="preloader" class="fixed inset-0 z-[9999] bg-[#050505] flex flex-col items-center justify-center">
+        <div class="glitch-wrapper">
+            <h1 class="glitch-text font-display" data-text="LAG">LAG</h1>
+        </div>
+        <div class="mt-8 flex items-center gap-4">
+            <div class="w-6 h-6 border-2 border-neon border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-neon-light font-mono text-sm tracking-[0.2em] uppercase opacity-80">Initializing Core...</span>
+        </div>
+    </div>
+
+    <!-- Floating Bottom App Navigation (Dock) -->
+    <nav class="fixed bottom-6 sm:bottom-10 left-1/2 transform -translate-x-1/2 z-50 glass-card rounded-[2rem] px-8 py-3 flex items-center gap-8 sm:gap-12 shadow-[0_20px_50px_rgba(0,0,0,0.9)] border border-white/10 backdrop-blur-xl transition-all duration-300">
+        <a href="#" onclick="window.scrollTo(0,0)" class="flex flex-col items-center justify-center gap-1.5 group">
+            <div class="w-5 h-5 border-2 border-neon border-t-transparent rounded-full animate-spin shadow-[0_0_10px_rgba(168,85,247,0.5)]"></div>
+            <span class="font-display font-bold text-[10px] text-white tracking-widest nav-glitch opacity-80 group-hover:opacity-100 transition-opacity" data-text="LAG">LAG</span>
+        </a>
+        <div class="w-px h-8 bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
+        <a href="#company-selector" class="flex flex-col items-center justify-center gap-1.5 text-gray-400 hover:text-white transition-all group">
+            <span class="text-xl group-hover:-translate-y-1 transition-transform duration-300">📑</span>
+            <span class="text-[9px] uppercase tracking-wider font-semibold opacity-70 group-hover:opacity-100">Proposals</span>
+        </a>
+        <a href="#terms" class="flex flex-col items-center justify-center gap-1.5 text-gray-400 hover:text-neon transition-all group">
+            <span class="text-xl group-hover:-translate-y-1 transition-transform duration-300">⚖️</span>
+            <span class="text-[9px] uppercase tracking-wider font-semibold opacity-70 group-hover:opacity-100">Terms</span>
+        </a>
+    </nav>
+
+    <!-- Header Section -->
+    <section id="company-selector" class="pt-16 pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
+        <div class="inline-block px-4 py-1 rounded-full border border-white/10 bg-white/5 text-neon-light text-xs font-mono uppercase tracking-widest mb-6">
+            Executive Dashboard
+        </div>
+        <h1 class="text-4xl md:text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-neon-light mb-6">
+            Select Your Target Profile
+        </h1>
+
+        <!-- Level 1: Company Tabs -->
+        <div class="flex justify-center gap-4 max-w-md mx-auto bg-black/40 p-1.5 rounded-2xl border border-white/5 backdrop-blur-md relative z-10 mb-8">
+            <button onclick="switchTab('kraft')" id="btn-kraft" class="flex-1 py-2.5 px-4 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)] border border-white/20">
+                📦 Kraft Pack
+            </button>
+            <button onclick="switchTab('ppi')" id="btn-ppi" class="flex-1 py-2.5 px-4 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 bg-transparent text-gray-400 hover:text-white hover:bg-white/5 border border-transparent">
+                🌍 PPI Corp
+            </button>
+        </div>
+    </section>
+
+    <!-- DYNAMIC DASHBOARD AREA -->
+    <div id="pricing-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 relative z-10">
+        
+        <!-- ========================================== -->
+        <!-- KRAFT PACK CONTENT -->
+        <!-- ========================================== -->
+        <div id="content-kraft" class="tab-content active">
+            
+            <div class="flex flex-col md:flex-row gap-8 lg:gap-12 items-start relative">
+                <!-- Details Side (Scrolling) -->
+                <div class="w-full md:w-3/5 lg:w-7/12 flex flex-col space-y-12 md:space-y-24 pb-32 pt-4 md:pt-8 order-last md:order-first">
+                    <!-- Kraft Tier 0 (8k) -->
+                    <div class="scroll-card glass-card rounded-3xl p-6 md:p-8 border-t-4 border-t-gray-500">
+                        <div class="mb-6">
+                            <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">Entry Level</span>
+                            <h3 class="text-3xl font-display font-bold text-white mt-1">Basic Identity</h3>
+                            <div class="mt-4 mb-2">
+                                <span class="text-3xl font-display font-bold text-white">8,000<span class="text-base font-normal text-gray-500 ml-1">EGP</span></span>
+                            </div>
+                            <p class="text-gray-400 mt-2 text-sm leading-relaxed">Essential digital footprint designed purely to represent the factory in the local market with standard Arabic content.</p>
+                        </div>
+                        <div class="h-px w-full bg-white/10 mb-6"></div>
+                        <ul class="space-y-4 text-gray-300 text-sm">
+                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Standard Template Design</li>
+                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Single Language (Arabic)</li>
+                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Simplified Product Showcase</li>
+                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Basic Contact Form</li>
+                        </ul>
+                    </div>
+
+                    <!-- Kraft Tier 1 (10k) -->
+                    <div class="scroll-card glass-card rounded-3xl p-6 md:p-8 neon-glow border-t-4 border-t-neon">
+                        <div class="mb-6">
+                            <span class="text-xs font-mono text-neon-light uppercase tracking-widest flex items-center gap-2">Recommended <span class="animate-pulse">●</span></span>
+                            <h3 class="text-3xl font-display font-bold text-white mt-1">Performance Pro</h3>
+                            <div class="mt-4 mb-2">
+                                <span class="text-3xl font-display font-bold text-neon-light">10,000<span class="text-base font-normal text-gray-500 ml-1">EGP</span></span>
+                            </div>
+                            <p class="text-gray-300 mt-2 text-sm leading-relaxed">High-speed, conversion-optimized architecture built to rank on search engines and deliver a flawless mobile experience.</p>
+                        </div>
+                        <div class="h-px w-full bg-neon/30 mb-6"></div>
+                        <ul class="space-y-4 text-gray-200 text-sm font-medium">
+                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Fully Responsive & Fluid UI</li>
+                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Advanced SEO Foundation</li>
+                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Ultra-fast Loading & Caching</li>
+                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Analytics & Map Integrations</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Chart Side (Sticky) -->
+                <div class="w-full md:w-2/5 lg:w-5/12 glass-card p-4 md:p-6 rounded-3xl flex flex-col justify-center sticky top-20 md:top-24 lg:top-32 z-30 h-fit order-first md:order-last">
+                    <h3 class="text-center font-display font-bold text-gray-200 mb-1 md:mb-2 tracking-wider text-xs md:text-sm uppercase">Live Metrics Comparison</h3>
+                    <p class="text-center text-[10px] md:text-xs text-gray-500 mb-2 md:mb-4">Values dynamically reflect your scroll position.</p>
+                    <div class="chart-container">
+                        <canvas id="chart-kraft"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PPI CONTENT -->
+        <!-- ========================================== -->
+        <div id="content-ppi" class="tab-content">
+            
+            <div class="flex flex-col md:flex-row gap-8 lg:gap-12 items-start relative">
+                <!-- Details Side (Scrolling) -->
+                <div class="w-full md:w-3/5 lg:w-7/12 flex flex-col space-y-12 md:space-y-24 pb-32 pt-4 md:pt-8 order-last md:order-first">
+                    <!-- PPI Tier 0 (10k) -->
+                    <div class="scroll-card glass-card rounded-3xl p-6 md:p-8 border-t-4 border-t-gray-500">
+                        <div class="mb-6">
+                            <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">Base Setup</span>
+                            <h3 class="text-3xl font-display font-bold text-white mt-1">Global Foundation</h3>
+                            <div class="mt-4 mb-2">
+                                <span class="text-3xl font-display font-bold text-white">10,000<span class="text-base font-normal text-gray-500 ml-1">EGP</span></span>
+                            </div>
+                            <p class="text-gray-400 mt-2 text-sm leading-relaxed">A dual-language digital catalog aimed at establishing baseline international exposure for product specifications.</p>
+                        </div>
+                        <div class="h-px w-full bg-white/10 mb-6"></div>
+                        <ul class="space-y-4 text-gray-300 text-sm">
+                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Corporate Layout Design</li>
+                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Bilingual System (EN/AR)</li>
+                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Standard Product Details</li>
+                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Basic Mobile Adaptation</li>
+                        </ul>
+                    </div>
+
+                    <!-- PPI Tier 1 (15k) -->
+                    <div class="scroll-card glass-card rounded-3xl p-6 md:p-8 neon-glow border-t-4 border-t-neon">
+                        <div class="mb-6">
+                            <span class="text-xs font-mono text-neon-light uppercase tracking-widest flex items-center gap-2">Export Focus <span class="animate-pulse">●</span></span>
+                            <h3 class="text-3xl font-display font-bold text-white mt-1">Corporate Lead Gen</h3>
+                            <div class="mt-4 mb-2">
+                                <span class="text-3xl font-display font-bold text-neon-light">15,000<span class="text-base font-normal text-gray-500 ml-1">EGP</span></span>
+                            </div>
+                            <p class="text-gray-300 mt-2 text-sm leading-relaxed">A robust B2B gateway featuring custom branding, deep international SEO, and powerful quotation systems to capture global leads.</p>
+                        </div>
+                        <div class="h-px w-full bg-neon/30 mb-6"></div>
+                        <ul class="space-y-4 text-gray-200 text-sm font-medium">
+                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Custom UI Brand Alignment</li>
+                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Advanced Quotation Logic</li>
+                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> International SEO Architecture</li>
+                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Global CDN & High Security</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Chart Side (Sticky) -->
+                <div class="w-full md:w-2/5 lg:w-5/12 glass-card p-4 md:p-6 rounded-3xl flex flex-col justify-center sticky top-20 md:top-24 lg:top-32 z-30 h-fit order-first md:order-last">
+                    <h3 class="text-center font-display font-bold text-gray-200 mb-1 md:mb-2 tracking-wider text-xs md:text-sm uppercase">Live Metrics Comparison</h3>
+                    <p class="text-center text-[10px] md:text-xs text-gray-500 mb-2 md:mb-4">Values dynamically reflect your scroll position.</p>
+                    <div class="chart-container">
+                        <canvas id="chart-ppi"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Terms Section -->
+    <section id="terms" class="py-16 relative z-10 border-t border-white/5 bg-black/50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="text-center mb-10 scroll-reveal">
+                <h2 class="text-3xl font-display font-bold text-white mb-2">Terms & Infrastructure</h2>
+                <p class="text-gray-400 text-sm">Transparent policies applicable to all tier selections.</p>
+            </div>
+            <div class="space-y-4">
+                <div class="glass-card rounded-xl overflow-hidden scroll-reveal">
+                    <button onclick="toggleAccordion('acc-costs', 'icon-costs')" class="w-full px-6 py-5 flex justify-between items-center bg-white/5 hover:bg-white/10 transition-colors focus:outline-none">
+                        <span class="font-bold text-gray-200 flex items-center gap-3"><span class="text-xl opacity-70">⚙️</span> Third-Party Infrastructure Costs</span>
+                        <span id="icon-costs" class="transform text-gray-400 inline-block">▼</span>
+                    </button>
+                    <div id="acc-costs" style="height: 0; overflow: hidden; opacity: 0;">
+                        <div class="px-6 py-5 text-gray-400 border-t border-white/5 bg-black/40">
+                            <ul class="list-none space-y-3 text-sm">
+                                <li class="flex items-start gap-2"><span class="text-neon">▹</span> <strong>Cloud Hosting & Domain:</strong> Approx. 3,500 EGP annually ensuring high uptime.</li>
+                                <li class="flex items-start gap-2"><span class="text-neon">▹</span> <strong>Premium Language Engines (PPI Only):</strong> Approx. $170 annually for pro translation plugins like WPML.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card rounded-xl overflow-hidden scroll-reveal">
+                    <button onclick="toggleAccordion('acc-payment', 'icon-payment')" class="w-full px-6 py-5 flex justify-between items-center bg-white/5 hover:bg-white/10 transition-colors focus:outline-none">
+                        <span class="font-bold text-gray-200 flex items-center gap-3"><span class="text-xl opacity-70">💳</span> Payment Protocol</span>
+                        <span id="icon-payment" class="transform text-gray-400 inline-block">▼</span>
+                    </button>
+                    <div id="acc-payment" style="height: 0; overflow: hidden; opacity: 0;">
+                        <div class="px-6 py-5 text-gray-400 border-t border-white/5 bg-black/40">
+                            <div class="flex flex-col sm:flex-row gap-4 justify-between">
+                                <div class="text-center p-4 bg-white/5 rounded-xl border border-white/5 flex-1 relative overflow-hidden">
+                                    <div class="font-display font-black text-3xl text-white">50%</div>
+                                    <div class="text-xs uppercase tracking-wider mt-2 opacity-70">Initiation Deposit</div>
+                                </div>
+                                <div class="text-center p-4 bg-white/5 rounded-xl border border-white/5 flex-1 relative overflow-hidden">
+                                    <div class="font-display font-black text-3xl text-neon-light">50%</div>
+                                    <div class="text-xs uppercase tracking-wider mt-2 opacity-70">Upon Final Delivery</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#020202] text-gray-600 pt-8 pb-32 text-center text-xs tracking-widest uppercase font-mono relative z-10">
+        <p>Prepared by LAG for PPI Corp & Kraft Pack</p>
+        <p class="mt-2 opacity-50">Confidential Document • Valid for 14 Days</p>
+    </footer>
+
+    <!-- Logic Script -->
+    <script>
+        window.activeCharts = { kraft: null, ppi: null };
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- NEW PREMIUM EFFECTS LOGIC ---
+        function initPremiumEffects() {
+            // 1. Custom Magnetic Cursor
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorOutline = document.querySelector('.cursor-outline');
+
+            const updateCursorPosition = (x, y) => {
+                cursorDot.style.left = `${x}px`;
+                cursorDot.style.top = `${y}px`;
+                gsap.to(cursorOutline, { x: x, y: y, duration: 0.15, ease: "power2.out" });
+            };
+
+            window.addEventListener('mousemove', (e) => {
+                updateCursorPosition(e.clientX, e.clientY);
+            });
+
+            // Touch support for cursor
+            window.addEventListener('touchmove', (e) => {
+                const touch = e.touches[0];
+                updateCursorPosition(touch.clientX, touch.clientY);
+            }, { passive: true });
+            
+            window.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                updateCursorPosition(touch.clientX, touch.clientY);
+            }, { passive: true });
+
+            // Cursor Hover States
+            document.querySelectorAll('a, button').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursorOutline.style.width = '60px';
+                    cursorOutline.style.height = '60px';
+                    cursorOutline.style.backgroundColor = 'rgba(168, 85, 247, 0.1)';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursorOutline.style.width = '40px';
+                    cursorOutline.style.height = '40px';
+                    cursorOutline.style.backgroundColor = 'transparent';
+                });
+            });
+
+            // 2. Flashlight Hover Effect
+            document.querySelectorAll('.glass-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
+            });
+        }
+
+        // --- Preloader & Intro Animation ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initPremiumEffects(); // Initialize Premium Effects
+
+            setTimeout(() => {
+                document.getElementById('preloader').style.opacity = '0';
+                document.getElementById('preloader').style.visibility = 'hidden';
+                
+                setTimeout(() => {
+                    initKraftChart();
+                    document.getElementById('preloader').style.display = 'none';
+                    
+                    // Initial Intro Animation with GSAP
+                    const tl = gsap.timeline();
+                    tl.fromTo("#company-selector h1, #company-selector .inline-block, #company-selector > div", 
+                        { opacity: 0, y: 30 }, 
+                        { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power3.out" }
+                    );
+                    tl.fromTo(".tier-content.active, .chart-container",
+                        { opacity: 0, scale: 0.95 },
+                        { opacity: 1, scale: 1, duration: 0.6, stagger: 0.2, ease: "power2.out" },
+                        "-=0.4"
+                    );
+
+                    // Highlight default tiers
+                    highlightChartData('kraft', 0);
+                    
+                    // Initialize scroll triggers
+                    initScrollAnimations();
+                    initCinematicScroll('kraft');
+                }, 800);
+            }, 2000);
+        });
+
+        // --- Cinematic Scroll Logic for Cards ---
+        function initCinematicScroll(company) {
+            // Kill existing scroll triggers for cards to prevent overlap
+            ScrollTrigger.getAll().forEach(t => {
+                if(t.vars.trigger && t.vars.trigger.classList && t.vars.trigger.classList.contains('scroll-card')) {
+                    t.kill();
+                }
+            });
+
+            const cards = gsap.utils.toArray(`#content-${company} .scroll-card`);
+            
+            cards.forEach((card, index) => {
+                const items = card.querySelectorAll('ul li');
+                
+                // Create a timeline for each card
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 80%", // Triggers when the top of the card is at 80% of the viewport height
+                        end: "bottom 20%", // Reverses when the bottom leaves 20%
+                        toggleActions: "play reverse play reverse", // Cinematic fade in/out smoothly on scroll
+                        onEnter: () => highlightChartData(company, index),
+                        onEnterBack: () => highlightChartData(company, index),
+                    }
+                });
+
+                // Card fading and scaling in
+                tl.fromTo(card, 
+                    { opacity: 0, y: 100, scale: 0.95 },
+                    { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "power3.out" }
+                )
+                // List items staggering in smoothly
+                .fromTo(items,
+                    { opacity: 0, x: -30 },
+                    { opacity: 1, x: 0, duration: 0.5, stagger: 0.15, ease: "back.out(1.2)" },
+                    "-=0.4" // overlap with the card animation
+                );
+            });
+        }
+
+        // --- Scroll Animations for general elements ---
+        function initScrollAnimations() {
+            gsap.utils.toArray('.scroll-reveal').forEach((el) => {
+                gsap.fromTo(el, 
+                    { opacity: 0, y: 40 },
+                    { 
+                        opacity: 1, 
+                        y: 0, 
+                        duration: 0.8, 
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: el,
+                            start: "top 85%",
+                            toggleActions: "play none none none"
+                        }
+                    }
+                );
+            });
+        }
+
+        // --- Chart Highlight Logic ---
+        function highlightChartData(company, activeIndex) {
+            const chart = window.activeCharts[company];
+            if (!chart) return;
+
+            chart.data.datasets.forEach((dataset, i) => {
+                if (i === activeIndex) {
+                    dataset.borderWidth = 4;
+                    dataset.backgroundColor = 'rgba(168, 85, 247, 0.4)'; 
+                    dataset.borderColor = '#a855f7';
+                } else {
+                    dataset.borderWidth = 1;
+                    dataset.backgroundColor = 'rgba(255, 255, 255, 0.05)'; 
+                    dataset.borderColor = 'rgba(255, 255, 255, 0.2)';
+                }
+            });
+            chart.update();
+        }
+
+        // --- Tab Switching Logic (Company) ---
+        let currentTab = 'kraft';
+        let chartsInitialized = { kraft: false, ppi: false };
+
+        function switchTab(company) {
+            if(company === currentTab) return;
+            const oldTabContent = document.getElementById(`content-${currentTab}`);
+            const newTabContent = document.getElementById(`content-${company}`);
+            
+            currentTab = company;
+
+            const btnKraft = document.getElementById('btn-kraft');
+            const btnPpi = document.getElementById('btn-ppi');
+            const activeClasses = "flex-1 py-2.5 px-4 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)] border border-white/20";
+            const inactiveClasses = "flex-1 py-2.5 px-4 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 bg-transparent text-gray-400 hover:text-white hover:bg-white/5 border border-transparent";
+
+            if(company === 'kraft') {
+                btnKraft.className = activeClasses;
+                btnPpi.className = inactiveClasses;
+            } else {
+                btnPpi.className = activeClasses;
+                btnKraft.className = inactiveClasses;
+            }
+
+            // GSAP Transition for Company Tabs
+            gsap.to(oldTabContent, {
+                opacity: 0, scale: 0.98, duration: 0.3, ease: "power2.in",
+                onComplete: () => {
+                    oldTabContent.classList.remove('active');
+                    newTabContent.classList.add('active');
+                    
+                    if(company === 'kraft' && !chartsInitialized.kraft) initKraftChart();
+                    if(company === 'ppi' && !chartsInitialized.ppi) initPpiChart();
+                    
+                    gsap.fromTo(newTabContent,
+                        { opacity: 0, scale: 0.98 },
+                        { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out", onComplete: () => {
+                            // Re-init cinematic scroll for the new tab
+                            initCinematicScroll(company);
+                        }}
+                    );
+                }
+            });
+        }
+
+        // --- Accordion Logic with GSAP ---
+        function toggleAccordion(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            const isOpen = content.classList.contains('open');
+
+            if (!isOpen) {
+                content.classList.add('open');
+                // Animate Height dynamically based on content
+                gsap.to(content, { height: "auto", opacity: 1, duration: 0.5, ease: "power3.inOut" });
+                gsap.to(icon, { rotation: 180, duration: 0.4, ease: "power2.inOut" });
+            } else {
+                content.classList.remove('open');
+                // Animate Height back to 0
+                gsap.to(content, { height: 0, opacity: 0, duration: 0.4, ease: "power3.inOut" });
+                gsap.to(icon, { rotation: 0, duration: 0.4, ease: "power2.inOut" });
+            }
+        }
+
+        // --- Chart.js Configuration ---
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#9ca3af';
+
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: 600, easing: 'easeOutQuart' },
+            scales: {
+                r: {
+                    angleLines: { color: 'rgba(255, 255, 255, 0.05)' },
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    pointLabels: { font: { size: 10, family: "'Space Grotesk', sans-serif", weight: '600' }, color: '#cbd5e1' },
+                    ticks: { display: false, min: 0, max: 100 }
+                }
+            },
+            plugins: {
+                legend: { display: false }, // Hide legend to make the UI cleaner, since the toggle acts as the legend
+                tooltip: {
+                    backgroundColor: 'rgba(10, 10, 10, 0.9)', titleColor: '#fff', bodyColor: '#a855f7',
+                    borderColor: 'rgba(168, 85, 247, 0.3)', borderWidth: 1, padding: 12, displayColors: false
+                }
+            }
+        };
+
+        function initKraftChart() {
+            const ctx = document.getElementById('chart-kraft').getContext('2d');
+            window.activeCharts.kraft = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['UI Design', 'Load Speed', 'Mobile Ready', 'SEO Base', 'Admin Panel'],
+                    datasets: [
+                        { label: '8,000 EGP Tier', data: [50, 60, 70, 30, 80], pointBackgroundColor: '#fff' },
+                        { label: '10,000 EGP Tier', data: [85, 100, 100, 95, 90], pointBackgroundColor: '#a855f7' }
+                    ]
+                },
+                options: commonOptions
+            });
+            chartsInitialized.kraft = true;
+        }
+
+        function initPpiChart() {
+            const ctx = document.getElementById('chart-ppi').getContext('2d');
+            window.activeCharts.ppi = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Custom Design', 'Quotation Logic', 'Bilingual (AR/EN)', 'Global SEO', 'Security'],
+                    datasets: [
+                        { label: '10,000 EGP Tier', data: [50, 40, 100, 40, 70], pointBackgroundColor: '#fff' },
+                        { label: '15,000 EGP Tier', data: [100, 100, 100, 95, 95], pointBackgroundColor: '#a855f7' }
+                    ]
+                },
+                options: commonOptions
+            });
+            chartsInitialized.ppi = true;
+        }
+    </script>
+</body>
+</html>
