@@ -4,41 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- ========================================== -->
-    <!-- SEO & Social Media Sharing Meta Tags (WhatsApp/Facebook) -->
-    <!-- ========================================== -->
+    <!-- SEO & Social Media Sharing Meta Tags -->
     <title>LAG - Web Offers</title>
     <meta name="description" content="Digital Architecture & Web Development Proposals for PPI Corp & Kraft Pack.">
-    
-    <!-- Open Graph Data -->
     <meta property="og:title" content="LAG - Web Offers">
     <meta property="og:description" content="Exclusive Digital Architecture & Web Development Proposals. Tailored for optimal ROI.">
     <meta property="og:type" content="website">
-    
-    <!-- الصورة اللي هتظهر في الـ Preview لما تبعت اللينك في رسالة -->
-    <!-- (حطيت لك صورة خلفية بنفسجية فخمة مؤقتاً، ولما ترفع الموقع تقدر تبدلها برابط لوجو شركتك الفعلي بصيغة PNG أو JPG) -->
     <meta property="og:image" content="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&h=630&fit=crop">
-    
-    <!-- Favicon: أيقونة التحميل البنفسجية المتحركة اللي بتظهر في شريط المتصفح من فوق -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%23a855f7' stroke-width='10' fill='none' stroke-dasharray='160' stroke-linecap='round'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 50 50' to='360 50 50' dur='1s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/svg%3E">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- GSAP & ScrollTrigger Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Fonts: Added Cairo for Arabic -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Chosen Palette: Dark Liquid Glass (Deep Black #050505, Translucent White/Glass, Neon Purple #A855F7) -->
-    <!-- Application Structure Plan: 
-         - Price-Based Dashboard: Removed scroll-jacking. Introduced a clean Tier Toggle (Price Selector).
-         - When a price is selected, the features card and the radar chart dynamically update to reflect ONLY that tier's value.
-         - Much easier cognitive load for the client.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-
     <script>
         tailwind.config = {
             theme: {
@@ -63,6 +45,7 @@
         }
     </script>
     <style>
+        /* Base Dark Theme (Default) */
         body {
             background-color: #050505;
             background-image: 
@@ -70,110 +53,110 @@
                 radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.05), transparent 25%);
             background-attachment: fixed;
             color: #f3f4f6;
-            overflow-x: clip; /* Fix for sticky positioning */
+            overflow-x: clip;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* Preloader Glitch Effect */
+        /* --- LIGHT THEME (SUN MODE) OVERRIDES --- */
+        body.light-theme {
+            background-color: #f8fafc;
+            color: #0f172a;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(168, 85, 247, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(30, 58, 138, 0.03), transparent 25%);
+        }
+        body.light-theme .glitch-text::before, body.light-theme .glitch-text::after, 
+        body.light-theme .nav-glitch::before, body.light-theme .nav-glitch::after { background: #f8fafc; }
+        body.light-theme .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
+            border-color: rgba(0,0,0,0.08);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+        }
+        body.light-theme .text-white { color: #0f172a !important; }
+        body.light-theme .text-gray-200 { color: #1e293b !important; }
+        body.light-theme .text-gray-300 { color: #334155 !important; }
+        body.light-theme .text-gray-400 { color: #475569 !important; }
+        body.light-theme .text-gray-500 { color: #64748b !important; }
+        body.light-theme .border-white\/10 { border-color: rgba(0,0,0,0.08) !important; }
+        body.light-theme .border-white\/20 { border-color: rgba(0,0,0,0.15) !important; }
+        body.light-theme .bg-white\/5 { background-color: rgba(0,0,0,0.03) !important; }
+        body.light-theme .bg-black\/40, body.light-theme .bg-black\/50, body.light-theme .bg-\[\#020202\] { 
+            background-color: rgba(255,255,255,0.7) !important; 
+            border-top-color: rgba(0,0,0,0.05); 
+        }
+        body.light-theme .scope-tag { background-color: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.1); color: #475569; }
+        body.light-theme .neon-glow {
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.2), inset 0 0 15px rgba(168, 85, 247, 0.05);
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+        body.light-theme .bg-orb { opacity: 0.6; }
+
+        /* Arabic Font Override */
+        body.font-arabic, body.font-arabic .font-display { font-family: 'Cairo', sans-serif !important; }
+
+        /* Switch Toggle Styles */
+        .toggle-dot { transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
+        input:checked ~ .toggle-bg { background-color: #a855f7; border-color: #a855f7; }
+        input:checked ~ .toggle-dot { transform: translateX(18px); background-color: white; }
+        /* RTL Logic for switches */
+        html[dir="rtl"] input:checked ~ .toggle-dot { transform: translateX(-18px); }
+
+        /* Preloader */
         #preloader { transition: opacity 0.8s ease-out, visibility 0.8s ease-out; }
         .glitch-wrapper { position: relative; }
-        .glitch-text {
-            font-size: 5rem; font-weight: 800; position: relative; color: white; letter-spacing: 0.5rem;
-        }
-        .glitch-text::before, .glitch-text::after {
-            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #050505;
-        }
-        .glitch-text::before {
-            left: 3px; text-shadow: -2px 0 #a855f7; clip: rect(24px, 550px, 90px, 0); animation: glitch-anim 2.5s infinite linear alternate-reverse;
-        }
-        .glitch-text::after {
-            left: -3px; text-shadow: -2px 0 #ffffff; clip: rect(85px, 550px, 140px, 0); animation: glitch-anim-2 3s infinite linear alternate-reverse;
-        }
-        @keyframes glitch-anim {
-            0% { clip: rect(13px, 9999px, 85px, 0); } 20% { clip: rect(100px, 9999px, 20px, 0); } 40% { clip: rect(98px, 9999px, 68px, 0); } 60% { clip: rect(88px, 9999px, 45px, 0); } 80% { clip: rect(91px, 9999px, 15px, 0); } 100% { clip: rect(44px, 9999px, 7px, 0); }
-        }
-        @keyframes glitch-anim-2 {
-            0% { clip: rect(65px, 9999px, 100px, 0); } 20% { clip: rect(99px, 9999px, 11px, 0); } 40% { clip: rect(29px, 9999px, 81px, 0); } 60% { clip: rect(42px, 9999px, 97px, 0); } 80% { clip: rect(26px, 9999px, 94px, 0); } 100% { clip: rect(81px, 9999px, 59px, 0); }
-        }
+        .glitch-text { font-size: 5rem; font-weight: 800; position: relative; color: white; letter-spacing: 0.5rem; }
+        .glitch-text::before, .glitch-text::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #050505; }
+        .glitch-text::before { left: 3px; text-shadow: -2px 0 #a855f7; clip: rect(24px, 550px, 90px, 0); animation: glitch-anim 2.5s infinite linear alternate-reverse; }
+        .glitch-text::after { left: -3px; text-shadow: -2px 0 #ffffff; clip: rect(85px, 550px, 140px, 0); animation: glitch-anim-2 3s infinite linear alternate-reverse; }
+        @keyframes glitch-anim { 0% { clip: rect(13px, 9999px, 85px, 0); } 50% { clip: rect(88px, 9999px, 45px, 0); } 100% { clip: rect(44px, 9999px, 7px, 0); } }
+        @keyframes glitch-anim-2 { 0% { clip: rect(65px, 9999px, 100px, 0); } 50% { clip: rect(42px, 9999px, 97px, 0); } 100% { clip: rect(81px, 9999px, 59px, 0); } }
 
-        /* Navbar Glitch Effect */
+        /* Navbar Glitch */
         .nav-glitch { position: relative; display: inline-block; }
-        .nav-glitch::before, .nav-glitch::after {
-            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 10, 10, 0.9);
-        }
+        .nav-glitch::before, .nav-glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 10, 10, 0.9); }
         .nav-glitch::before { left: 2px; text-shadow: -1px 0 #a855f7; animation: nav-glitch-anim 2s infinite linear alternate-reverse; }
         .nav-glitch::after { left: -2px; text-shadow: -1px 0 #ffffff; animation: nav-glitch-anim-2 2.5s infinite linear alternate-reverse; }
-        @keyframes nav-glitch-anim { 0% { clip-path: inset(10% 0 60% 0); } 50% { clip-path: inset(40% 0 30% 0); } 100% { clip-path: inset(30% 0 50% 0); } }
-        @keyframes nav-glitch-anim-2 { 0% { clip-path: inset(20% 0 20% 0); } 50% { clip-path: inset(10% 0 50% 0); } 100% { clip-path: inset(50% 0 30% 0); } }
+        @keyframes nav-glitch-anim { 0% { clip-path: inset(10% 0 60% 0); } 100% { clip-path: inset(30% 0 50% 0); } }
+        @keyframes nav-glitch-anim-2 { 0% { clip-path: inset(20% 0 20% 0); } 100% { clip-path: inset(50% 0 30% 0); } }
 
-        /* Glassmorphism Classes */
-        .glass-panel {
-            background: rgba(10, 10, 10, 0.4); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08);
-        }
+        /* Glassmorphism */
         .glass-card {
             background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
             backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); transition: all 0.3s ease;
         }
-        .neon-glow {
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4), inset 0 0 15px rgba(168, 85, 247, 0.1);
-            border-color: rgba(168, 85, 247, 0.5);
-        }
 
-        /* Tab Transitions */
-        .tab-content {
-            display: none; opacity: 0;
-        }
-        .tab-content.active {
-            display: block; opacity: 1;
-        }
-
-        .chart-container {
-            position: relative; width: 100%; max-width: 500px; margin: auto; height: 220px;
-        }
-        @media (min-width: 768px) {
-            .chart-container { height: 350px; }
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #050505; }
-        ::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.3); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(168, 85, 247, 0.6); }
-
-        html { scroll-behavior: smooth; }
-
-        /* --- NEW PREMIUM EFFECTS --- */
-        /* Custom Cursor (All Devices) */
-        body, a, button { cursor: none !important; }
-        
-        .cursor-dot, .cursor-outline { 
-            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); 
-            border-radius: 50%; z-index: 9999; pointer-events: none; opacity: 1; 
-        }
-        .cursor-dot { width: 6px; height: 6px; background-color: #a855f7; box-shadow: 0 0 10px #a855f7; }
-        .cursor-outline { 
-            width: 40px; height: 40px; border: 1px solid rgba(168, 85, 247, 0.5); 
-            transition: width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out; 
-        }
-
-        /* Background Animated Liquid Orbs */
-        .bg-orb { 
-            position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; 
-            opacity: 0.3; animation: floatOrb 20s infinite ease-in-out alternate; pointer-events: none; 
-        }
-        .orb-1 { top: -20%; left: -10%; width: 50vw; height: 50vw; background: rgba(168, 85, 247, 0.15); }
-        .orb-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: rgba(30, 58, 138, 0.15); animation-delay: -10s; }
-        @keyframes floatOrb { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(5%, 10%) scale(1.1); } }
-
-        /* Flashlight Effect for Glass Cards */
+        /* Flashlight Effect */
         .glass-card { position: relative; overflow: hidden; }
         .glass-card::before {
             content: ''; position: absolute; top: var(--mouse-y, 0); left: var(--mouse-x, 0); transform: translate(-50%, -50%);
             width: 450px; height: 450px; background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 60%);
             opacity: 0; transition: opacity 0.5s; pointer-events: none; mix-blend-mode: screen; z-index: 1;
         }
+        body.light-theme .glass-card::before { mix-blend-mode: multiply; background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, transparent 60%); }
         .glass-card:hover::before { opacity: 1; }
-        .glass-card > * { position: relative; z-index: 2; } /* Keep text above the glow */
+        .glass-card > * { position: relative; z-index: 2; } 
+
+        .tab-content { display: none; opacity: 0; }
+        .tab-content.active { display: block; opacity: 1; }
+        .chart-container { position: relative; width: 100%; max-width: 500px; margin: auto; height: 220px; }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(168, 85, 247, 0.6); }
+        html { scroll-behavior: smooth; }
+
+        /* Cursor & Orbs */
+        body, a, button, label { cursor: none !important; }
+        .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; opacity: 1; }
+        .cursor-dot { width: 6px; height: 6px; background-color: #a855f7; box-shadow: 0 0 10px #a855f7; }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid rgba(168, 85, 247, 0.5); transition: width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out; }
+        .bg-orb { position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: 0.3; animation: floatOrb 20s infinite ease-in-out alternate; pointer-events: none; }
+        .orb-1 { top: -20%; left: -10%; width: 50vw; height: 50vw; background: rgba(168, 85, 247, 0.15); }
+        .orb-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: rgba(30, 58, 138, 0.15); animation-delay: -10s; }
+        @keyframes floatOrb { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(5%, 10%) scale(1.1); } }
     </style>
 </head>
 <body class="font-sans antialiased selection:bg-neon selection:text-white">
@@ -182,7 +165,7 @@
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
-    <!-- Background Animated Orbs -->
+    <!-- Background Orbs -->
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
 
@@ -193,8 +176,35 @@
         </div>
         <div class="mt-8 flex items-center gap-4">
             <div class="w-6 h-6 border-2 border-neon border-t-transparent rounded-full animate-spin"></div>
-            <span class="text-neon-light font-mono text-sm tracking-[0.2em] uppercase opacity-80">Initializing Core...</span>
+            <span class="text-neon-light font-mono text-sm tracking-[0.2em] uppercase opacity-80" data-i18n="init_core">Initializing Core...</span>
         </div>
+    </div>
+
+    <!-- Floating Top-Right Settings (Toggles) -->
+    <div class="fixed top-4 end-4 sm:top-6 sm:end-6 z-[100] flex flex-col sm:flex-row gap-3">
+        <!-- Theme Switch -->
+        <label class="flex items-center justify-between glass-card px-3 py-2 rounded-full hover:scale-105 transition-transform" dir="ltr">
+            <span class="text-[10px] font-bold text-gray-400 mr-2">☀️</span>
+            <div class="relative w-9 h-4.5 rounded-full shadow-inner">
+                <!-- Checked = Dark Mode (Default) -->
+                <input type="checkbox" id="theme-toggle" class="sr-only" onchange="toggleTheme()" checked>
+                <div class="toggle-bg block w-9 h-5 bg-gray-600 border border-white/20 rounded-full transition-colors"></div>
+                <div class="toggle-dot absolute left-0.5 top-0.5 w-4 h-4 bg-gray-300 rounded-full shadow"></div>
+            </div>
+            <span class="text-[10px] font-bold text-gray-400 ml-2">🌙</span>
+        </label>
+
+        <!-- Language Switch -->
+        <label class="flex items-center justify-between glass-card px-3 py-2 rounded-full hover:scale-105 transition-transform" dir="ltr">
+            <span class="text-[10px] font-bold text-gray-400 mr-2">EN</span>
+            <div class="relative w-9 h-4.5 rounded-full shadow-inner">
+                <!-- Unchecked = English (Default) -->
+                <input type="checkbox" id="lang-toggle" class="sr-only" onchange="toggleLang()">
+                <div class="toggle-bg block w-9 h-5 bg-gray-600 border border-white/20 rounded-full transition-colors"></div>
+                <div class="toggle-dot absolute left-0.5 top-0.5 w-4 h-4 bg-gray-300 rounded-full shadow"></div>
+            </div>
+            <span class="text-[12px] font-bold text-gray-400 ml-2 font-arabic pt-0.5">ع</span>
+        </label>
     </div>
 
     <!-- Floating Bottom App Navigation (Dock) -->
@@ -206,29 +216,28 @@
         <div class="w-px h-8 bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
         <a href="#company-selector" class="flex flex-col items-center justify-center gap-1.5 text-gray-400 hover:text-white transition-all group">
             <span class="text-xl group-hover:-translate-y-1 transition-transform duration-300">📑</span>
-            <span class="text-[9px] uppercase tracking-wider font-semibold opacity-70 group-hover:opacity-100">Proposals</span>
+            <span class="text-[9px] uppercase tracking-wider font-semibold opacity-70 group-hover:opacity-100" data-i18n="dock_proposals">PROPOSALS</span>
         </a>
         <a href="#terms" class="flex flex-col items-center justify-center gap-1.5 text-gray-400 hover:text-neon transition-all group">
             <span class="text-xl group-hover:-translate-y-1 transition-transform duration-300">⚖️</span>
-            <span class="text-[9px] uppercase tracking-wider font-semibold opacity-70 group-hover:opacity-100">Terms</span>
+            <span class="text-[9px] uppercase tracking-wider font-semibold opacity-70 group-hover:opacity-100" data-i18n="dock_terms">TERMS</span>
         </a>
     </nav>
 
     <!-- Header Section -->
     <section id="company-selector" class="pt-16 pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
-        <div class="inline-block px-4 py-1 rounded-full border border-white/10 bg-white/5 text-neon-light text-xs font-mono uppercase tracking-widest mb-6">
+        <div class="inline-block px-4 py-1 rounded-full border border-white/10 bg-white/5 text-neon-light text-xs font-mono uppercase tracking-widest mb-6" data-i18n="hero_badge">
             Executive Dashboard
         </div>
-        <h1 class="text-4xl md:text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-neon-light mb-6">
+        <h1 class="text-4xl md:text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-neon-light mb-6" data-i18n="hero_title">
             Select Your Target Profile
         </h1>
 
-        <!-- Level 1: Company Tabs -->
         <div class="flex justify-center gap-4 max-w-md mx-auto bg-black/40 p-1.5 rounded-2xl border border-white/5 backdrop-blur-md relative z-10 mb-8">
-            <button onclick="switchTab('kraft')" id="btn-kraft" class="flex-1 py-2.5 px-4 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)] border border-white/20">
+            <button onclick="switchTab('kraft')" id="btn-kraft" class="flex-1 py-2.5 px-4 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)] border border-white/20" data-i18n="hero_kraft">
                 📦 Kraft Pack
             </button>
-            <button onclick="switchTab('ppi')" id="btn-ppi" class="flex-1 py-2.5 px-4 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 bg-transparent text-gray-400 hover:text-white hover:bg-white/5 border border-transparent">
+            <button onclick="switchTab('ppi')" id="btn-ppi" class="flex-1 py-2.5 px-4 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 bg-transparent text-gray-400 hover:text-white hover:bg-white/5 border border-transparent" data-i18n="hero_ppi">
                 🌍 PPI Corp
             </button>
         </div>
@@ -237,57 +246,76 @@
     <!-- DYNAMIC DASHBOARD AREA -->
     <div id="pricing-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 relative z-10">
         
-        <!-- ========================================== -->
         <!-- KRAFT PACK CONTENT -->
-        <!-- ========================================== -->
         <div id="content-kraft" class="tab-content active">
-            
             <div class="flex flex-col md:flex-row gap-8 lg:gap-12 items-start relative">
-                <!-- Details Side (Scrolling) -->
+                <!-- Details Side -->
                 <div class="w-full md:w-3/5 lg:w-7/12 flex flex-col space-y-12 md:space-y-24 pb-32 pt-4 md:pt-8 order-last md:order-first">
-                    <!-- Kraft Tier 0 (8k) -->
+                    <!-- Kraft Tier 0 -->
                     <div class="scroll-card glass-card rounded-3xl p-6 md:p-8 border-t-4 border-t-gray-500">
                         <div class="mb-6">
-                            <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">Entry Level</span>
-                            <h3 class="text-3xl font-display font-bold text-white mt-1">Basic Identity</h3>
+                            <span class="text-xs font-mono text-gray-400 uppercase tracking-widest" data-i18n="kraft_entry">Entry Level</span>
+                            <h3 class="text-3xl font-display font-bold text-white mt-1" data-i18n="kraft_tier0_title">Basic Identity</h3>
                             <div class="mt-4 mb-2">
-                                <span class="text-3xl font-display font-bold text-white">8,000<span class="text-base font-normal text-gray-500 ml-1">EGP</span></span>
+                                <span class="text-3xl font-display font-bold text-white" data-i18n="kraft_tier0_price">8,000<span class="text-base font-normal opacity-70 ms-1">EGP</span></span>
                             </div>
-                            <p class="text-gray-400 mt-2 text-sm leading-relaxed">Essential digital footprint designed purely to represent the factory in the local market with standard Arabic content.</p>
+                            <p class="text-gray-400 mt-2 text-sm leading-relaxed" data-i18n="kraft_tier0_desc">Essential digital footprint designed purely to represent the corrugated factory in the local market with standard Arabic content.</p>
                         </div>
                         <div class="h-px w-full bg-white/10 mb-6"></div>
-                        <ul class="space-y-4 text-gray-300 text-sm">
-                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Standard Template Design</li>
-                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Single Language (Arabic)</li>
-                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Simplified Product Showcase</li>
-                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Basic Contact Form</li>
+                        <ul class="space-y-4 text-gray-300 text-sm mb-6">
+                            <li class="flex items-center gap-3" data-i18n="feat_std_design"><span class="text-gray-500 text-lg">▹</span> Standard Template Design</li>
+                            <li class="flex items-center gap-3" data-i18n="feat_single_lang"><span class="text-gray-500 text-lg">▹</span> Single Language (Arabic)</li>
+                            <li class="flex items-center gap-3" data-i18n="feat_simp_corr"><span class="text-gray-500 text-lg">▹</span> Simplified Corrugated Showcase</li>
+                            <li class="flex items-center gap-3" data-i18n="feat_basic_contact"><span class="text-gray-500 text-lg">▹</span> Basic Contact Form</li>
                         </ul>
+                        <div class="pt-4 border-t border-white/10">
+                            <h4 class="text-[10px] font-mono text-gray-400 uppercase tracking-widest mb-3" data-i18n="sitemap_title">Sitemap & Included Content</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="scope-tag px-2 py-1 text-xs bg-white/5 border border-white/10 rounded text-gray-300" data-i18n="tag_home">Home Page</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-white/5 border border-white/10 rounded text-gray-300" data-i18n="tag_about">About Factory</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-white/5 border border-white/10 rounded text-gray-300" data-i18n="tag_prod10">Products (Max 10)</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-white/5 border border-white/10 rounded text-gray-300" data-i18n="tag_cat">Categories: RSC / Die-Cut</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-white/5 border border-white/10 rounded text-gray-300" data-i18n="tag_contact">Contact Us</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Kraft Tier 1 (10k) -->
+                    <!-- Kraft Tier 1 -->
                     <div class="scroll-card glass-card rounded-3xl p-6 md:p-8 neon-glow border-t-4 border-t-neon">
                         <div class="mb-6">
-                            <span class="text-xs font-mono text-neon-light uppercase tracking-widest flex items-center gap-2">Recommended <span class="animate-pulse">●</span></span>
-                            <h3 class="text-3xl font-display font-bold text-white mt-1">Performance Pro</h3>
+                            <span class="text-xs font-mono text-neon-light uppercase tracking-widest flex items-center gap-2" data-i18n="kraft_rec">Recommended <span class="animate-pulse">●</span></span>
+                            <h3 class="text-3xl font-display font-bold text-white mt-1" data-i18n="kraft_tier1_title">Performance Pro</h3>
                             <div class="mt-4 mb-2">
-                                <span class="text-3xl font-display font-bold text-neon-light">10,000<span class="text-base font-normal text-gray-500 ml-1">EGP</span></span>
+                                <span class="text-3xl font-display font-bold text-neon-light" data-i18n="kraft_tier1_price">10,000<span class="text-base font-normal opacity-70 ms-1">EGP</span></span>
                             </div>
-                            <p class="text-gray-300 mt-2 text-sm leading-relaxed">High-speed, conversion-optimized architecture built to rank on search engines and deliver a flawless mobile experience.</p>
+                            <p class="text-gray-300 mt-2 text-sm leading-relaxed" data-i18n="kraft_tier1_desc">High-speed, conversion-optimized architecture built to showcase full factory capabilities, machinery, and box specifications.</p>
                         </div>
                         <div class="h-px w-full bg-neon/30 mb-6"></div>
-                        <ul class="space-y-4 text-gray-200 text-sm font-medium">
-                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Fully Responsive & Fluid UI</li>
-                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Advanced SEO Foundation</li>
-                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Ultra-fast Loading & Caching</li>
-                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Analytics & Map Integrations</li>
+                        <ul class="space-y-4 text-gray-200 text-sm font-medium mb-6">
+                            <li class="flex items-center gap-3" data-i18n="feat_resp"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Fully Responsive & Fluid UI</li>
+                            <li class="flex items-center gap-3" data-i18n="feat_seo"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Advanced SEO Foundation</li>
+                            <li class="flex items-center gap-3" data-i18n="feat_speed"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Ultra-fast Loading & Caching</li>
+                            <li class="flex items-center gap-3" data-i18n="feat_analytics"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Analytics & Map Integrations</li>
                         </ul>
+                        <div class="pt-4 border-t border-neon/20">
+                            <h4 class="text-[10px] font-mono text-neon-light uppercase tracking-widest mb-3" data-i18n="sitemap_title">Sitemap & Included Content</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="scope-tag px-2 py-1 text-xs bg-neon/10 border border-neon/30 rounded text-neon-light" data-i18n="tag_dyn_home">Dynamic Home</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-neon/10 border border-neon/30 rounded text-neon-light" data-i18n="tag_machinery">Factory & Machinery</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-neon/10 border border-neon/30 rounded text-neon-light" data-i18n="tag_prod25">Catalog (Up to 25 items)</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-neon/10 border border-neon/30 rounded text-neon-light" data-i18n="tag_types">RSC, Sheets, Printed Boxes</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-neon/10 border border-neon/30 rounded text-neon-light" data-i18n="tag_flutes">Flute Specs (B, C, E, BC)</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-neon/10 border border-neon/30 rounded text-neon-light" data-i18n="tag_qc">Quality Control</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-neon/10 border border-neon/30 rounded text-neon-light" data-i18n="tag_contact_map">Contact & Google Maps</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Chart Side (Sticky) -->
+                <!-- Chart Side -->
                 <div class="w-full md:w-2/5 lg:w-5/12 glass-card p-4 md:p-6 rounded-3xl flex flex-col justify-center sticky top-20 md:top-24 lg:top-32 z-30 h-fit order-first md:order-last">
-                    <h3 class="text-center font-display font-bold text-gray-200 mb-1 md:mb-2 tracking-wider text-xs md:text-sm uppercase">Live Metrics Comparison</h3>
-                    <p class="text-center text-[10px] md:text-xs text-gray-500 mb-2 md:mb-4">Values dynamically reflect your scroll position.</p>
+                    <h3 class="text-center font-display font-bold text-gray-200 mb-1 md:mb-2 tracking-wider text-xs md:text-sm uppercase" data-i18n="metrics_title">Live Metrics Comparison</h3>
+                    <p class="text-center text-[10px] md:text-xs text-gray-500 mb-2 md:mb-4" data-i18n="metrics_desc">Values dynamically reflect your scroll position.</p>
                     <div class="chart-container">
                         <canvas id="chart-kraft"></canvas>
                     </div>
@@ -295,57 +323,75 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
         <!-- PPI CONTENT -->
-        <!-- ========================================== -->
         <div id="content-ppi" class="tab-content">
-            
             <div class="flex flex-col md:flex-row gap-8 lg:gap-12 items-start relative">
-                <!-- Details Side (Scrolling) -->
+                <!-- Details Side -->
                 <div class="w-full md:w-3/5 lg:w-7/12 flex flex-col space-y-12 md:space-y-24 pb-32 pt-4 md:pt-8 order-last md:order-first">
-                    <!-- PPI Tier 0 (10k) -->
+                    <!-- PPI Tier 0 -->
                     <div class="scroll-card glass-card rounded-3xl p-6 md:p-8 border-t-4 border-t-gray-500">
                         <div class="mb-6">
-                            <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">Base Setup</span>
-                            <h3 class="text-3xl font-display font-bold text-white mt-1">Global Foundation</h3>
+                            <span class="text-xs font-mono text-gray-400 uppercase tracking-widest" data-i18n="ppi_base">Base Setup</span>
+                            <h3 class="text-3xl font-display font-bold text-white mt-1" data-i18n="ppi_tier0_title">Global Foundation</h3>
                             <div class="mt-4 mb-2">
-                                <span class="text-3xl font-display font-bold text-white">10,000<span class="text-base font-normal text-gray-500 ml-1">EGP</span></span>
+                                <span class="text-3xl font-display font-bold text-white" data-i18n="ppi_tier0_price">10,000<span class="text-base font-normal opacity-70 ms-1">EGP</span></span>
                             </div>
-                            <p class="text-gray-400 mt-2 text-sm leading-relaxed">A dual-language digital catalog aimed at establishing baseline international exposure for product specifications.</p>
+                            <p class="text-gray-400 mt-2 text-sm leading-relaxed" data-i18n="ppi_tier0_desc">A dual-language digital catalog aimed at establishing baseline international exposure for paper rolls and jumbo rolls.</p>
                         </div>
                         <div class="h-px w-full bg-white/10 mb-6"></div>
-                        <ul class="space-y-4 text-gray-300 text-sm">
-                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Corporate Layout Design</li>
-                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Bilingual System (EN/AR)</li>
-                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Standard Product Details</li>
-                            <li class="flex items-center gap-3"><span class="text-gray-500 text-lg">▹</span> Basic Mobile Adaptation</li>
+                        <ul class="space-y-4 text-gray-300 text-sm mb-6">
+                            <li class="flex items-center gap-3" data-i18n="feat_corp_design"><span class="text-gray-500 text-lg">▹</span> Corporate Layout Design</li>
+                            <li class="flex items-center gap-3" data-i18n="feat_bilingual"><span class="text-gray-500 text-lg">▹</span> Bilingual System (EN/AR)</li>
+                            <li class="flex items-center gap-3" data-i18n="feat_std_prod"><span class="text-gray-500 text-lg">▹</span> Standard Product Details</li>
+                            <li class="flex items-center gap-3" data-i18n="feat_mobile"><span class="text-gray-500 text-lg">▹</span> Basic Mobile Adaptation</li>
                         </ul>
+                        <div class="pt-4 border-t border-white/10">
+                            <h4 class="text-[10px] font-mono text-gray-400 uppercase tracking-widest mb-3" data-i18n="sitemap_title">Sitemap & Included Content</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="scope-tag px-2 py-1 text-xs bg-white/5 border border-white/10 rounded text-gray-300" data-i18n="tag_home_biling">Home (AR/EN)</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-white/5 border border-white/10 rounded text-gray-300" data-i18n="tag_corp_profile">Corporate Profile</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-white/5 border border-white/10 rounded text-gray-300" data-i18n="tag_paper_cat">Paper Grades Catalog</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-white/5 border border-white/10 rounded text-gray-300" data-i18n="tag_kraft_test">Kraft & Testliner</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-white/5 border border-white/10 rounded text-gray-300" data-i18n="tag_contact_form">Contact Form</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- PPI Tier 1 (15k) -->
+                    <!-- PPI Tier 1 -->
                     <div class="scroll-card glass-card rounded-3xl p-6 md:p-8 neon-glow border-t-4 border-t-neon">
                         <div class="mb-6">
-                            <span class="text-xs font-mono text-neon-light uppercase tracking-widest flex items-center gap-2">Export Focus <span class="animate-pulse">●</span></span>
-                            <h3 class="text-3xl font-display font-bold text-white mt-1">Corporate Lead Gen</h3>
+                            <span class="text-xs font-mono text-neon-light uppercase tracking-widest flex items-center gap-2" data-i18n="ppi_exp">Export Focus <span class="animate-pulse">●</span></span>
+                            <h3 class="text-3xl font-display font-bold text-white mt-1" data-i18n="ppi_tier1_title">Corporate Lead Gen</h3>
                             <div class="mt-4 mb-2">
-                                <span class="text-3xl font-display font-bold text-neon-light">15,000<span class="text-base font-normal text-gray-500 ml-1">EGP</span></span>
+                                <span class="text-3xl font-display font-bold text-neon-light" data-i18n="ppi_tier1_price">15,000<span class="text-base font-normal opacity-70 ms-1">EGP</span></span>
                             </div>
-                            <p class="text-gray-300 mt-2 text-sm leading-relaxed">A robust B2B gateway featuring custom branding, deep international SEO, and powerful quotation systems to capture global leads.</p>
+                            <p class="text-gray-300 mt-2 text-sm leading-relaxed" data-i18n="ppi_tier1_desc">A robust B2B gateway featuring custom branding, technical spec sheets, and powerful quotation systems to capture global leads.</p>
                         </div>
                         <div class="h-px w-full bg-neon/30 mb-6"></div>
-                        <ul class="space-y-4 text-gray-200 text-sm font-medium">
-                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Custom UI Brand Alignment</li>
-                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Advanced Quotation Logic</li>
-                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> International SEO Architecture</li>
-                            <li class="flex items-center gap-3"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Global CDN & High Security</li>
+                        <ul class="space-y-4 text-gray-200 text-sm font-medium mb-6">
+                            <li class="flex items-center gap-3" data-i18n="feat_ui_brand"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Custom UI Brand Alignment</li>
+                            <li class="flex items-center gap-3" data-i18n="feat_quote"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Advanced Quotation Logic</li>
+                            <li class="flex items-center gap-3" data-i18n="feat_int_seo"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> International SEO Architecture</li>
+                            <li class="flex items-center gap-3" data-i18n="feat_cdn"><span class="text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]">✦</span> Global CDN & High Security</li>
                         </ul>
+                        <div class="pt-4 border-t border-neon/20">
+                            <h4 class="text-[10px] font-mono text-neon-light uppercase tracking-widest mb-3" data-i18n="sitemap_title">Sitemap & Included Content</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="scope-tag px-2 py-1 text-xs bg-neon/10 border border-neon/30 rounded text-neon-light" data-i18n="tag_b2b_portal">B2B Portal (AR/EN)</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-neon/10 border border-neon/30 rounded text-neon-light" data-i18n="tag_reach">Global Reach & Logistics</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-neon/10 border border-neon/30 rounded text-neon-light" data-i18n="tag_cat_det">Detailed Catalog (Testliner, Fluting, Top Kraft)</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-neon/10 border border-neon/30 rounded text-neon-light" data-i18n="tag_specs">Technical Specs (GSM, Bursting)</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-neon/10 border border-neon/30 rounded text-neon-light" data-i18n="tag_req_quote">Request a Quote System</span>
+                                <span class="scope-tag px-2 py-1 text-xs bg-neon/10 border border-neon/30 rounded text-neon-light" data-i18n="tag_int_contacts">International Contacts</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Chart Side (Sticky) -->
+                <!-- Chart Side -->
                 <div class="w-full md:w-2/5 lg:w-5/12 glass-card p-4 md:p-6 rounded-3xl flex flex-col justify-center sticky top-20 md:top-24 lg:top-32 z-30 h-fit order-first md:order-last">
-                    <h3 class="text-center font-display font-bold text-gray-200 mb-1 md:mb-2 tracking-wider text-xs md:text-sm uppercase">Live Metrics Comparison</h3>
-                    <p class="text-center text-[10px] md:text-xs text-gray-500 mb-2 md:mb-4">Values dynamically reflect your scroll position.</p>
+                    <h3 class="text-center font-display font-bold text-gray-200 mb-1 md:mb-2 tracking-wider text-xs md:text-sm uppercase" data-i18n="metrics_title">Live Metrics Comparison</h3>
+                    <p class="text-center text-[10px] md:text-xs text-gray-500 mb-2 md:mb-4" data-i18n="metrics_desc">Values dynamically reflect your scroll position.</p>
                     <div class="chart-container">
                         <canvas id="chart-ppi"></canvas>
                     </div>
@@ -359,27 +405,27 @@
     <section id="terms" class="py-16 relative z-10 border-t border-white/5 bg-black/50">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div class="text-center mb-10 scroll-reveal">
-                <h2 class="text-3xl font-display font-bold text-white mb-2">Terms & Infrastructure</h2>
-                <p class="text-gray-400 text-sm">Transparent policies applicable to all tier selections.</p>
+                <h2 class="text-3xl font-display font-bold text-white mb-2" data-i18n="terms_title">Terms & Infrastructure</h2>
+                <p class="text-gray-400 text-sm" data-i18n="terms_desc">Transparent policies applicable to all tier selections.</p>
             </div>
             <div class="space-y-4">
                 <div class="glass-card rounded-xl overflow-hidden scroll-reveal">
                     <button onclick="toggleAccordion('acc-costs', 'icon-costs')" class="w-full px-6 py-5 flex justify-between items-center bg-white/5 hover:bg-white/10 transition-colors focus:outline-none">
-                        <span class="font-bold text-gray-200 flex items-center gap-3"><span class="text-xl opacity-70">⚙️</span> Third-Party Infrastructure Costs</span>
+                        <span class="font-bold text-gray-200 flex items-center gap-3" data-i18n="term1_title"><span class="text-xl opacity-70">⚙️</span> Third-Party Infrastructure Costs</span>
                         <span id="icon-costs" class="transform text-gray-400 inline-block">▼</span>
                     </button>
                     <div id="acc-costs" style="height: 0; overflow: hidden; opacity: 0;">
                         <div class="px-6 py-5 text-gray-400 border-t border-white/5 bg-black/40">
                             <ul class="list-none space-y-3 text-sm">
-                                <li class="flex items-start gap-2"><span class="text-neon">▹</span> <strong>Cloud Hosting & Domain:</strong> Approx. 3,500 EGP annually ensuring high uptime.</li>
-                                <li class="flex items-start gap-2"><span class="text-neon">▹</span> <strong>Premium Language Engines (PPI Only):</strong> Approx. $170 annually for pro translation plugins like WPML.</li>
+                                <li class="flex items-start gap-2" data-i18n="term1_b1"><span class="text-neon drop-shadow-md">▹</span> <strong>Cloud Hosting & Domain:</strong> Approx. 3,500 EGP annually ensuring high uptime.</li>
+                                <li class="flex items-start gap-2" data-i18n="term1_b2"><span class="text-neon drop-shadow-md">▹</span> <strong>Premium Language Engines (PPI Only):</strong> Approx. $170 annually for pro translation plugins like WPML.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="glass-card rounded-xl overflow-hidden scroll-reveal">
                     <button onclick="toggleAccordion('acc-payment', 'icon-payment')" class="w-full px-6 py-5 flex justify-between items-center bg-white/5 hover:bg-white/10 transition-colors focus:outline-none">
-                        <span class="font-bold text-gray-200 flex items-center gap-3"><span class="text-xl opacity-70">💳</span> Payment Protocol</span>
+                        <span class="font-bold text-gray-200 flex items-center gap-3" data-i18n="term2_title"><span class="text-xl opacity-70">💳</span> Payment Protocol</span>
                         <span id="icon-payment" class="transform text-gray-400 inline-block">▼</span>
                     </button>
                     <div id="acc-payment" style="height: 0; overflow: hidden; opacity: 0;">
@@ -387,11 +433,11 @@
                             <div class="flex flex-col sm:flex-row gap-4 justify-between">
                                 <div class="text-center p-4 bg-white/5 rounded-xl border border-white/5 flex-1 relative overflow-hidden">
                                     <div class="font-display font-black text-3xl text-white">50%</div>
-                                    <div class="text-xs uppercase tracking-wider mt-2 opacity-70">Initiation Deposit</div>
+                                    <div class="text-xs uppercase tracking-wider mt-2 opacity-70" data-i18n="term2_d1">Initiation Deposit</div>
                                 </div>
                                 <div class="text-center p-4 bg-white/5 rounded-xl border border-white/5 flex-1 relative overflow-hidden">
                                     <div class="font-display font-black text-3xl text-neon-light">50%</div>
-                                    <div class="text-xs uppercase tracking-wider mt-2 opacity-70">Upon Final Delivery</div>
+                                    <div class="text-xs uppercase tracking-wider mt-2 opacity-70" data-i18n="term2_d2">Upon Final Delivery</div>
                                 </div>
                             </div>
                         </div>
@@ -403,8 +449,8 @@
 
     <!-- Footer -->
     <footer class="bg-[#020202] text-gray-600 pt-8 pb-32 text-center text-xs tracking-widest uppercase font-mono relative z-10">
-        <p>Prepared by LAG for PPI Corp & Kraft Pack</p>
-        <p class="mt-2 opacity-50">Confidential Document • Valid for 14 Days</p>
+        <p data-i18n="footer_1">Prepared by LAG for PPI Corp & Kraft Pack</p>
+        <p class="mt-2 opacity-50" data-i18n="footer_2">Confidential Document • Valid for 14 Days</p>
     </footer>
 
     <!-- Logic Script -->
@@ -412,9 +458,186 @@
         window.activeCharts = { kraft: null, ppi: null };
         gsap.registerPlugin(ScrollTrigger);
 
-        // --- NEW PREMIUM EFFECTS LOGIC ---
+        /* =========================================
+           DICTIONARY & I18N ENGINE
+           ========================================= */
+        const dict = {
+            en: {
+                init_core: "Initializing Core...",
+                dock_proposals: "PROPOSALS", dock_terms: "TERMS",
+                hero_badge: "Executive Dashboard", hero_title: "Select Your Target Profile",
+                hero_kraft: "📦 Kraft Pack", hero_ppi: "🌍 PPI Corp",
+                kraft_entry: "Entry Level", kraft_tier0_title: "Basic Identity",
+                kraft_tier0_price: "8,000<span class='text-base font-normal opacity-70 ms-1'>EGP</span>",
+                kraft_tier0_desc: "Essential digital footprint designed purely to represent the corrugated factory in the local market with standard Arabic content.",
+                feat_std_design: "<span class='text-gray-500 text-lg'>▹</span> Standard Template Design",
+                feat_single_lang: "<span class='text-gray-500 text-lg'>▹</span> Single Language (Arabic)",
+                feat_simp_corr: "<span class='text-gray-500 text-lg'>▹</span> Simplified Corrugated Showcase",
+                feat_basic_contact: "<span class='text-gray-500 text-lg'>▹</span> Basic Contact Form",
+                sitemap_title: "Sitemap & Included Content",
+                tag_home: "Home Page", tag_about: "About Factory", tag_prod10: "Products (Max 10)", tag_cat: "Categories: RSC / Die-Cut", tag_contact: "Contact Us",
+                kraft_rec: "Recommended <span class='animate-pulse'>●</span>", kraft_tier1_title: "Performance Pro",
+                kraft_tier1_price: "10,000<span class='text-base font-normal opacity-70 ms-1'>EGP</span>",
+                kraft_tier1_desc: "High-speed, conversion-optimized architecture built to showcase full factory capabilities, machinery, and box specifications.",
+                feat_resp: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> Fully Responsive & Fluid UI",
+                feat_seo: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> Advanced SEO Foundation",
+                feat_speed: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> Ultra-fast Loading & Caching",
+                feat_analytics: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> Analytics & Map Integrations",
+                tag_dyn_home: "Dynamic Home", tag_machinery: "Factory & Machinery", tag_prod25: "Catalog (Up to 25 items)", tag_types: "RSC, Sheets, Printed Boxes", tag_flutes: "Flute Specs (B, C, E, BC)", tag_qc: "Quality Control", tag_contact_map: "Contact & Google Maps",
+                metrics_title: "Live Metrics Comparison", metrics_desc: "Values dynamically reflect your scroll position.",
+                
+                ppi_base: "Base Setup", ppi_tier0_title: "Global Foundation",
+                ppi_tier0_price: "10,000<span class='text-base font-normal opacity-70 ms-1'>EGP</span>",
+                ppi_tier0_desc: "A dual-language digital catalog aimed at establishing baseline international exposure for paper rolls and jumbo rolls.",
+                feat_corp_design: "<span class='text-gray-500 text-lg'>▹</span> Corporate Layout Design",
+                feat_bilingual: "<span class='text-gray-500 text-lg'>▹</span> Bilingual System (EN/AR)",
+                feat_std_prod: "<span class='text-gray-500 text-lg'>▹</span> Standard Product Details",
+                feat_mobile: "<span class='text-gray-500 text-lg'>▹</span> Basic Mobile Adaptation",
+                tag_home_biling: "Home (AR/EN)", tag_corp_profile: "Corporate Profile", tag_paper_cat: "Paper Grades Catalog", tag_kraft_test: "Kraft & Testliner", tag_contact_form: "Contact Form",
+                ppi_exp: "Export Focus <span class='animate-pulse'>●</span>", ppi_tier1_title: "Corporate Lead Gen",
+                ppi_tier1_price: "15,000<span class='text-base font-normal opacity-70 ms-1'>EGP</span>",
+                ppi_tier1_desc: "A robust B2B gateway featuring custom branding, technical spec sheets, and powerful quotation systems to capture global leads.",
+                feat_ui_brand: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> Custom UI Brand Alignment",
+                feat_quote: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> Advanced Quotation Logic",
+                feat_int_seo: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> International SEO Architecture",
+                feat_cdn: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> Global CDN & High Security",
+                tag_b2b_portal: "B2B Portal (AR/EN)", tag_reach: "Global Reach & Logistics", tag_cat_det: "Detailed Catalog (Testliner, Fluting, Top Kraft)", tag_specs: "Technical Specs (GSM, Bursting)", tag_req_quote: "Request a Quote System", tag_int_contacts: "International Contacts",
+
+                terms_title: "Terms & Infrastructure", terms_desc: "Transparent policies applicable to all tier selections.",
+                term1_title: "<span class='text-xl opacity-70'>⚙️</span> Third-Party Infrastructure Costs",
+                term1_b1: "<span class='text-neon drop-shadow-md'>▹</span> <strong>Cloud Hosting & Domain:</strong> Approx. 3,500 EGP annually ensuring high uptime.",
+                term1_b2: "<span class='text-neon drop-shadow-md'>▹</span> <strong>Premium Language Engines (PPI Only):</strong> Approx. $170 annually for pro translation plugins like WPML.",
+                term2_title: "<span class='text-xl opacity-70'>💳</span> Payment Protocol",
+                term2_d1: "Initiation Deposit", term2_d2: "Upon Final Delivery",
+                footer_1: "Prepared by LAG for PPI Corp & Kraft Pack", footer_2: "Confidential Document • Valid for 14 Days"
+            },
+            ar: {
+                init_core: "جاري التهيئة...",
+                dock_proposals: "العروض", dock_terms: "الشروط",
+                hero_badge: "لوحة التحكم التنفيذية", hero_title: "اختر الملف المستهدف",
+                hero_kraft: "📦 كرافت باك", hero_ppi: "🌍 شركة PPI",
+                kraft_entry: "المستوى التأسيسي", kraft_tier0_title: "الهوية الأساسية",
+                kraft_tier0_price: "8,000<span class='text-base font-normal opacity-70 ms-1'>ج.م</span>",
+                kraft_tier0_desc: "واجهة رقمية أساسية مصممة لتمثيل مصنع الكرتون المضلع في السوق المحلي بمحتوى عربي قياسي.",
+                feat_std_design: "<span class='text-gray-500 text-lg'>▹</span> تصميم قالب قياسي",
+                feat_single_lang: "<span class='text-gray-500 text-lg'>▹</span> لغة واحدة (عربي)",
+                feat_simp_corr: "<span class='text-gray-500 text-lg'>▹</span> عرض مبسط لمنتجات الكرتون",
+                feat_basic_contact: "<span class='text-gray-500 text-lg'>▹</span> نموذج تواصل أساسي",
+                sitemap_title: "خريطة الموقع والمحتوى المضمن",
+                tag_home: "الرئيسية", tag_about: "عن المصنع", tag_prod10: "المنتجات (حد أقصى ١٠)", tag_cat: "تصنيفات: عادية / داي كات", tag_contact: "اتصل بنا",
+                kraft_rec: "موصى بها <span class='animate-pulse'>●</span>", kraft_tier1_title: "الأداء الاحترافي",
+                kraft_tier1_price: "10,000<span class='text-base font-normal opacity-70 ms-1'>ج.م</span>",
+                kraft_tier1_desc: "بنية سريعة محسنة للتحويلات، مصممة لعرض إمكانيات المصنع، الماكينات، ومواصفات الكرتون بالكامل.",
+                feat_resp: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> واجهة متجاوبة ومرنة بالكامل",
+                feat_seo: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> أساس متقدم لمحركات البحث",
+                feat_speed: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> تحميل فائق السرعة",
+                feat_analytics: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> ربط الخرائط والتحليلات",
+                tag_dyn_home: "رئيسية تفاعلية", tag_machinery: "المصنع والماكينات", tag_prod25: "كتالوج (حتى ٢٥ منتج)", tag_types: "علب، شيتات، مطبوعات", tag_flutes: "مواصفات الفلوت (B, C, E, BC)", tag_qc: "مراقبة الجودة", tag_contact_map: "التواصل وخرائط جوجل",
+                metrics_title: "مقارنة حية للمقاييس", metrics_desc: "تتحدث القيم تلقائياً مع التمرير.",
+                
+                ppi_base: "الإعداد الأساسي", ppi_tier0_title: "الأساس العالمي",
+                ppi_tier0_price: "10,000<span class='text-base font-normal opacity-70 ms-1'>ج.م</span>",
+                ppi_tier0_desc: "كتالوج رقمي ثنائي اللغة يهدف لتأسيس تواجد دولي لعرض بكر الورق والرولات الجامبو.",
+                feat_corp_design: "<span class='text-gray-500 text-lg'>▹</span> تصميم مؤسسي احترافي",
+                feat_bilingual: "<span class='text-gray-500 text-lg'>▹</span> نظام ثنائي اللغة (ع/إ)",
+                feat_std_prod: "<span class='text-gray-500 text-lg'>▹</span> تفاصيل المنتجات القياسية",
+                feat_mobile: "<span class='text-gray-500 text-lg'>▹</span> توافق أساسي مع الجوال",
+                tag_home_biling: "الرئيسية (ع/إ)", tag_corp_profile: "ملف الشركة", tag_paper_cat: "درجات الورق", tag_kraft_test: "كرافت وتست لاينر", tag_contact_form: "نموذج التواصل",
+                ppi_exp: "تركيز التصدير <span class='animate-pulse'>●</span>", ppi_tier1_title: "جلب العملاء الدوليين",
+                ppi_tier1_price: "15,000<span class='text-base font-normal opacity-70 ms-1'>ج.م</span>",
+                ppi_tier1_desc: "بوابة B2B قوية بهوية مخصصة، جداول مواصفات فنية، وأنظمة تسعير قوية لجذب العملاء الدوليين.",
+                feat_ui_brand: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> واجهة توافق هوية العلامة",
+                feat_quote: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> نظام متقدم لطلبات التسعير",
+                feat_int_seo: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> تهيئة محركات بحث دولية",
+                feat_cdn: "<span class='text-neon text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]'>✦</span> حماية فائقة وسرعة عالمية",
+                tag_b2b_portal: "بوابة B2B (ع/إ)", tag_reach: "الانتشار واللوجستيات", tag_cat_det: "كتالوج مفصل (تست لاينر، فلوتنج)", tag_specs: "مواصفات فنية (الوزن، الانفجار)", tag_req_quote: "نظام طلب عروض أسعار", tag_int_contacts: "قنوات التواصل الدولية",
+
+                terms_title: "الشروط والبنية التحتية", terms_desc: "سياسات شفافة تُطبق على جميع الباقات المختارة.",
+                term1_title: "<span class='text-xl opacity-70'>⚙️</span> تكاليف البنية التحتية الخارجية",
+                term1_b1: "<span class='text-neon drop-shadow-md'>▹</span> <strong>الاستضافة السحابية والدومين:</strong> حوالي 3,500 ج.م سنوياً لضمان استقرار وسرعة الموقع.",
+                term1_b2: "<span class='text-neon drop-shadow-md'>▹</span> <strong>محركات الترجمة (لـ PPI فقط):</strong> حوالي 170 دولار سنوياً لإضافات الترجمة الاحترافية WPML.",
+                term2_title: "<span class='text-xl opacity-70'>💳</span> نظام الدفع",
+                term2_d1: "دفعة مقدمة للبدء", term2_d2: "عند التسليم النهائي",
+                footer_1: "تم الإعداد بواسطة LAG لـ PPI Corp و Kraft Pack", footer_2: "مستند سري • صالح لمدة 14 يوم"
+            }
+        };
+
+        const chartTranslations = {
+            en: {
+                kraft: ['UI Design', 'Load Speed', 'Mobile Ready', 'SEO Base', 'Admin Panel'],
+                ppi: ['Custom Design', 'Quotation Logic', 'Bilingual (AR/EN)', 'Global SEO', 'Security']
+            },
+            ar: {
+                kraft: ['تصميم الواجهة', 'سرعة التحميل', 'تجاوب الموبايل', 'تهيئة محركات البحث', 'لوحة التحكم'],
+                ppi: ['تصميم مخصص', 'نظام التسعير', 'ثنائي اللغة (ع/إ)', 'SEO دولي', 'الحماية']
+            }
+        };
+
+        let currentLang = 'en';
+
+        function toggleLang() {
+            const isAr = document.getElementById('lang-toggle').checked;
+            currentLang = isAr ? 'ar' : 'en';
+            
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = currentLang;
+            
+            if(currentLang === 'ar') document.body.classList.add('font-arabic');
+            else document.body.classList.remove('font-arabic');
+
+            // Translate DOM
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(dict[currentLang][key]) el.innerHTML = dict[currentLang][key];
+            });
+
+            // Translate Charts
+            ['kraft', 'ppi'].forEach(comp => {
+                if(window.activeCharts[comp]) {
+                    window.activeCharts[comp].data.labels = chartTranslations[currentLang][comp];
+                    window.activeCharts[comp].options.scales.r.pointLabels.font.family = currentLang === 'ar' ? "'Cairo', sans-serif" : "'Space Grotesk', sans-serif";
+                    window.activeCharts[comp].update();
+                }
+            });
+            
+            setTimeout(() => ScrollTrigger.refresh(), 200);
+        }
+
+        /* =========================================
+           THEME ENGINE
+           ========================================= */
+        function toggleTheme() {
+            const isDark = document.getElementById('theme-toggle').checked;
+            if(isDark) document.body.classList.remove('light-theme');
+            else document.body.classList.add('light-theme');
+            
+            updateChartTheme();
+        }
+
+        function updateChartTheme() {
+            const isDark = document.getElementById('theme-toggle').checked;
+            const textColor = isDark ? '#cbd5e1' : '#475569';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.1)';
+
+            ['kraft', 'ppi'].forEach(comp => {
+                if(window.activeCharts[comp]) {
+                    window.activeCharts[comp].options.scales.r.angleLines.color = gridColor;
+                    window.activeCharts[comp].options.scales.r.grid.color = gridColor;
+                    window.activeCharts[comp].options.scales.r.pointLabels.color = textColor;
+                    
+                    // Trigger manual highlight refresh
+                    const cards = document.querySelectorAll(`#content-${comp} .scroll-card`);
+                    let activeIndex = 0; // Default to first if none found
+                    cards.forEach((c, i) => { if(c.style.opacity == 1) activeIndex = i; });
+                    highlightChartData(comp, activeIndex);
+                }
+            });
+        }
+
+        /* =========================================
+           PREMIUM EFFECTS & UX
+           ========================================= */
         function initPremiumEffects() {
-            // 1. Custom Magnetic Cursor
             const cursorDot = document.querySelector('.cursor-dot');
             const cursorOutline = document.querySelector('.cursor-outline');
 
@@ -424,50 +647,32 @@
                 gsap.to(cursorOutline, { x: x, y: y, duration: 0.15, ease: "power2.out" });
             };
 
-            window.addEventListener('mousemove', (e) => {
-                updateCursorPosition(e.clientX, e.clientY);
-            });
+            window.addEventListener('mousemove', (e) => updateCursorPosition(e.clientX, e.clientY));
+            window.addEventListener('touchmove', (e) => updateCursorPosition(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+            window.addEventListener('touchstart', (e) => updateCursorPosition(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
 
-            // Touch support for cursor
-            window.addEventListener('touchmove', (e) => {
-                const touch = e.touches[0];
-                updateCursorPosition(touch.clientX, touch.clientY);
-            }, { passive: true });
-            
-            window.addEventListener('touchstart', (e) => {
-                const touch = e.touches[0];
-                updateCursorPosition(touch.clientX, touch.clientY);
-            }, { passive: true });
-
-            // Cursor Hover States
-            document.querySelectorAll('a, button').forEach(el => {
+            document.querySelectorAll('a, button, label').forEach(el => {
                 el.addEventListener('mouseenter', () => {
-                    cursorOutline.style.width = '60px';
-                    cursorOutline.style.height = '60px';
+                    cursorOutline.style.width = '60px'; cursorOutline.style.height = '60px';
                     cursorOutline.style.backgroundColor = 'rgba(168, 85, 247, 0.1)';
                 });
                 el.addEventListener('mouseleave', () => {
-                    cursorOutline.style.width = '40px';
-                    cursorOutline.style.height = '40px';
+                    cursorOutline.style.width = '40px'; cursorOutline.style.height = '40px';
                     cursorOutline.style.backgroundColor = 'transparent';
                 });
             });
 
-            // 2. Flashlight Hover Effect
             document.querySelectorAll('.glass-card').forEach(card => {
                 card.addEventListener('mousemove', (e) => {
                     const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    card.style.setProperty('--mouse-x', `${x}px`);
-                    card.style.setProperty('--mouse-y', `${y}px`);
+                    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
                 });
             });
         }
 
-        // --- Preloader & Intro Animation ---
         document.addEventListener('DOMContentLoaded', () => {
-            initPremiumEffects(); // Initialize Premium Effects
+            initPremiumEffects();
 
             setTimeout(() => {
                 document.getElementById('preloader').style.opacity = '0';
@@ -477,108 +682,78 @@
                     initKraftChart();
                     document.getElementById('preloader').style.display = 'none';
                     
-                    // Initial Intro Animation with GSAP
                     const tl = gsap.timeline();
                     tl.fromTo("#company-selector h1, #company-selector .inline-block, #company-selector > div", 
-                        { opacity: 0, y: 30 }, 
-                        { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power3.out" }
+                        { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power3.out" }
                     );
                     tl.fromTo(".tier-content.active, .chart-container",
-                        { opacity: 0, scale: 0.95 },
-                        { opacity: 1, scale: 1, duration: 0.6, stagger: 0.2, ease: "power2.out" },
-                        "-=0.4"
+                        { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.6, stagger: 0.2, ease: "power2.out" }, "-=0.4"
                     );
 
-                    // Highlight default tiers
                     highlightChartData('kraft', 0);
-                    
-                    // Initialize scroll triggers
                     initScrollAnimations();
                     initCinematicScroll('kraft');
                 }, 800);
             }, 2000);
         });
 
-        // --- Cinematic Scroll Logic for Cards ---
+        /* =========================================
+           SCROLL & ANIMATION LOGIC
+           ========================================= */
         function initCinematicScroll(company) {
-            // Kill existing scroll triggers for cards to prevent overlap
             ScrollTrigger.getAll().forEach(t => {
-                if(t.vars.trigger && t.vars.trigger.classList && t.vars.trigger.classList.contains('scroll-card')) {
-                    t.kill();
-                }
+                if(t.vars.trigger && t.vars.trigger.classList && t.vars.trigger.classList.contains('scroll-card')) t.kill();
             });
 
             const cards = gsap.utils.toArray(`#content-${company} .scroll-card`);
             
             cards.forEach((card, index) => {
-                const items = card.querySelectorAll('ul li');
-                
-                // Create a timeline for each card
+                const items = card.querySelectorAll('ul li, .scope-tag');
                 const tl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: card,
-                        start: "top 80%", // Triggers when the top of the card is at 80% of the viewport height
-                        end: "bottom 20%", // Reverses when the bottom leaves 20%
-                        toggleActions: "play reverse play reverse", // Cinematic fade in/out smoothly on scroll
+                        trigger: card, start: "top 80%", end: "bottom 20%", 
+                        toggleActions: "play reverse play reverse", 
                         onEnter: () => highlightChartData(company, index),
                         onEnterBack: () => highlightChartData(company, index),
                     }
                 });
 
-                // Card fading and scaling in
-                tl.fromTo(card, 
-                    { opacity: 0, y: 100, scale: 0.95 },
-                    { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "power3.out" }
-                )
-                // List items staggering in smoothly
-                .fromTo(items,
-                    { opacity: 0, x: -30 },
-                    { opacity: 1, x: 0, duration: 0.5, stagger: 0.15, ease: "back.out(1.2)" },
-                    "-=0.4" // overlap with the card animation
-                );
+                tl.fromTo(card, { opacity: 0, y: 100, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "power3.out" })
+                  .fromTo(items, { opacity: 0, x: -30, scale: 0.8 }, { opacity: 1, x: 0, scale: 1, duration: 0.5, stagger: 0.05, ease: "back.out(1.2)" }, "-=0.4");
             });
         }
 
-        // --- Scroll Animations for general elements ---
         function initScrollAnimations() {
             gsap.utils.toArray('.scroll-reveal').forEach((el) => {
-                gsap.fromTo(el, 
-                    { opacity: 0, y: 40 },
-                    { 
-                        opacity: 1, 
-                        y: 0, 
-                        duration: 0.8, 
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: el,
-                            start: "top 85%",
-                            toggleActions: "play none none none"
-                        }
-                    }
-                );
+                gsap.fromTo(el, { opacity: 0, y: 40 }, { 
+                    opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
+                    scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" }
+                });
             });
         }
 
-        // --- Chart Highlight Logic ---
+        /* =========================================
+           CHART.JS LOGIC
+           ========================================= */
         function highlightChartData(company, activeIndex) {
             const chart = window.activeCharts[company];
             if (!chart) return;
+            const isDark = document.getElementById('theme-toggle').checked;
 
             chart.data.datasets.forEach((dataset, i) => {
                 if (i === activeIndex) {
                     dataset.borderWidth = 4;
-                    dataset.backgroundColor = 'rgba(168, 85, 247, 0.4)'; 
+                    dataset.backgroundColor = isDark ? 'rgba(168, 85, 247, 0.4)' : 'rgba(168, 85, 247, 0.3)'; 
                     dataset.borderColor = '#a855f7';
                 } else {
                     dataset.borderWidth = 1;
-                    dataset.backgroundColor = 'rgba(255, 255, 255, 0.05)'; 
-                    dataset.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    dataset.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)'; 
+                    dataset.borderColor = isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)';
                 }
             });
             chart.update();
         }
 
-        // --- Tab Switching Logic (Company) ---
         let currentTab = 'kraft';
         let chartsInitialized = { kraft: false, ppi: false };
 
@@ -588,21 +763,14 @@
             const newTabContent = document.getElementById(`content-${company}`);
             
             currentTab = company;
-
             const btnKraft = document.getElementById('btn-kraft');
             const btnPpi = document.getElementById('btn-ppi');
             const activeClasses = "flex-1 py-2.5 px-4 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)] border border-white/20";
             const inactiveClasses = "flex-1 py-2.5 px-4 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 bg-transparent text-gray-400 hover:text-white hover:bg-white/5 border border-transparent";
 
-            if(company === 'kraft') {
-                btnKraft.className = activeClasses;
-                btnPpi.className = inactiveClasses;
-            } else {
-                btnPpi.className = activeClasses;
-                btnKraft.className = inactiveClasses;
-            }
+            if(company === 'kraft') { btnKraft.className = activeClasses; btnPpi.className = inactiveClasses; } 
+            else { btnPpi.className = activeClasses; btnKraft.className = inactiveClasses; }
 
-            // GSAP Transition for Company Tabs
             gsap.to(oldTabContent, {
                 opacity: 0, scale: 0.98, duration: 0.3, ease: "power2.in",
                 onComplete: () => {
@@ -614,16 +782,12 @@
                     
                     gsap.fromTo(newTabContent,
                         { opacity: 0, scale: 0.98 },
-                        { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out", onComplete: () => {
-                            // Re-init cinematic scroll for the new tab
-                            initCinematicScroll(company);
-                        }}
+                        { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out", onComplete: () => initCinematicScroll(company) }
                     );
                 }
             });
         }
 
-        // --- Accordion Logic with GSAP ---
         function toggleAccordion(contentId, iconId) {
             const content = document.getElementById(contentId);
             const icon = document.getElementById(iconId);
@@ -631,39 +795,28 @@
 
             if (!isOpen) {
                 content.classList.add('open');
-                // Animate Height dynamically based on content
                 gsap.to(content, { height: "auto", opacity: 1, duration: 0.5, ease: "power3.inOut" });
                 gsap.to(icon, { rotation: 180, duration: 0.4, ease: "power2.inOut" });
             } else {
                 content.classList.remove('open');
-                // Animate Height back to 0
                 gsap.to(content, { height: 0, opacity: 0, duration: 0.4, ease: "power3.inOut" });
                 gsap.to(icon, { rotation: 0, duration: 0.4, ease: "power2.inOut" });
             }
         }
 
-        // --- Chart.js Configuration ---
         Chart.defaults.font.family = "'Inter', sans-serif";
-        Chart.defaults.color = '#9ca3af';
-
         const commonOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: { duration: 600, easing: 'easeOutQuart' },
+            responsive: true, maintainAspectRatio: false, animation: { duration: 600, easing: 'easeOutQuart' },
             scales: {
                 r: {
-                    angleLines: { color: 'rgba(255, 255, 255, 0.05)' },
-                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    angleLines: { color: 'rgba(255, 255, 255, 0.05)' }, grid: { color: 'rgba(255, 255, 255, 0.05)' },
                     pointLabels: { font: { size: 10, family: "'Space Grotesk', sans-serif", weight: '600' }, color: '#cbd5e1' },
                     ticks: { display: false, min: 0, max: 100 }
                 }
             },
             plugins: {
-                legend: { display: false }, // Hide legend to make the UI cleaner, since the toggle acts as the legend
-                tooltip: {
-                    backgroundColor: 'rgba(10, 10, 10, 0.9)', titleColor: '#fff', bodyColor: '#a855f7',
-                    borderColor: 'rgba(168, 85, 247, 0.3)', borderWidth: 1, padding: 12, displayColors: false
-                }
+                legend: { display: false }, 
+                tooltip: { backgroundColor: 'rgba(10, 10, 10, 0.9)', titleColor: '#fff', bodyColor: '#a855f7', borderColor: 'rgba(168, 85, 247, 0.3)', borderWidth: 1, padding: 12, displayColors: false }
             }
         };
 
@@ -672,15 +825,16 @@
             window.activeCharts.kraft = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ['UI Design', 'Load Speed', 'Mobile Ready', 'SEO Base', 'Admin Panel'],
+                    labels: chartTranslations[currentLang].kraft,
                     datasets: [
-                        { label: '8,000 EGP Tier', data: [50, 60, 70, 30, 80], pointBackgroundColor: '#fff' },
-                        { label: '10,000 EGP Tier', data: [85, 100, 100, 95, 90], pointBackgroundColor: '#a855f7' }
+                        { label: '8,000 EGP', data: [50, 60, 70, 30, 80], pointBackgroundColor: '#fff' },
+                        { label: '10,000 EGP', data: [85, 100, 100, 95, 90], pointBackgroundColor: '#a855f7' }
                     ]
                 },
                 options: commonOptions
             });
             chartsInitialized.kraft = true;
+            updateChartTheme(); // apply current theme colors
         }
 
         function initPpiChart() {
@@ -688,15 +842,16 @@
             window.activeCharts.ppi = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ['Custom Design', 'Quotation Logic', 'Bilingual (AR/EN)', 'Global SEO', 'Security'],
+                    labels: chartTranslations[currentLang].ppi,
                     datasets: [
-                        { label: '10,000 EGP Tier', data: [50, 40, 100, 40, 70], pointBackgroundColor: '#fff' },
-                        { label: '15,000 EGP Tier', data: [100, 100, 100, 95, 95], pointBackgroundColor: '#a855f7' }
+                        { label: '10,000 EGP', data: [50, 40, 100, 40, 70], pointBackgroundColor: '#fff' },
+                        { label: '15,000 EGP', data: [100, 100, 100, 95, 95], pointBackgroundColor: '#a855f7' }
                     ]
                 },
                 options: commonOptions
             });
             chartsInitialized.ppi = true;
+            updateChartTheme(); // apply current theme colors
         }
     </script>
 </body>
